@@ -4,21 +4,52 @@ export const NUMERO_DE_LINEA = '5491176116901';
 export const META_PIXEL_ID = '1310425690151156';
 export const META_EVENT_NAME = 'ClickTrebol';
 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1310425690151156');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1310425690151156&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+// Mensaje predeterminado
+const MENSAJE_WA = encodeURIComponent('¡Hola! Quiero un USU4RIO. Me llamo: ');
+
+// Función para obtener el enlace de WhatsApp
+function getWhatsappLink() {
+    return `https://wa.me/${NUMERO_DE_LINEA}?text=${MENSAJE_WA}`;
+}
+
+// Función para inicializar el pixel de Meta
+function initMetaPixel() {
+    if (typeof fbq !== 'undefined' && PIXEL_ID) {
+        fbq('init', PIXEL_ID);
+        fbq('track', 'PageView');
+        
+        // Configurar también el noscript fallback
+        const noscriptImg = document.getElementById('meta-pixel-noscript');
+        if (noscriptImg) {
+            noscriptImg.src = `https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`;
+        }
+    }
+}
+
+// Actualiza el botón en el index.html
+window.addEventListener('DOMContentLoaded', function() {
+    // Inicializar el pixel de Meta con el ID del config
+    initMetaPixel();
+    
+    const btn = document.getElementById('whatsapp-btn');
+    if (btn) {
+        btn.setAttribute('href', getWhatsappLink());
+        btn.setAttribute('target', '_blank');
+        
+        // Agregar evento de Meta Pixel para tracking de clics
+        btn.addEventListener('click', function() {
+            // Evento personalizado de Meta Pixel
+            if (typeof fbq !== 'undefined' && EVENTO_CLICK) {
+                fbq('trackCustom', EVENTO_CLICK, {
+                    website: 'webtrebol',
+                    platform: 'WhatsApp',
+                    page: document.title,
+                    url: window.location.href,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        });
+    }
+});
+
 
