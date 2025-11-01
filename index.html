@@ -18,7 +18,29 @@
     <link rel="dns-prefetch" href="https://connect.facebook.net">
     <link rel="dns-prefetch" href="https://wa.link">
     <!-- Meta Pixel Code -->
-
+    <script type="module">
+    import { META_PIXEL_ID } from './config.js';
+    
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', META_PIXEL_ID);
+    fbq('track', 'PageView');
+    </script>
+    <script type="module">
+    import { META_PIXEL_ID } from './config.js';
+    const pixelImg = document.createElement('img');
+    pixelImg.height = 1;
+    pixelImg.width = 1;
+    pixelImg.style.display = 'none';
+    pixelImg.src = `https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`;
+    document.head.appendChild(pixelImg);
+    </script>
 <!-- End Meta Pixel Code -->
     <style>
     /* Estilo para el logotipo superior en círculo */
@@ -995,7 +1017,7 @@
     window.addEventListener('load',()=>{window.scrollTo(0,0);});
 </script>
 <script type="module">
-import { NUMERO_DE_LINEA } from './config.js';
+import { NUMERO_DE_LINEA, META_EVENT_NAME } from './config.js';
 
 function getWhatsappLink() {
     const mensaje = encodeURIComponent('¡Hola! Quiero crear un USU4RIO. Mi nombre es:');
@@ -1007,6 +1029,17 @@ window.addEventListener('DOMContentLoaded', function() {
     if (waBtn) {
         waBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Enviar evento personalizado a Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', META_EVENT_NAME, {
+                    content_name: 'WhatsApp Contact',
+                    content_category: 'Contact Form',
+                    source: 'website_button',
+                    button_location: 'hero_section'
+                });
+            }
+            
             window.open(getWhatsappLink(), '_blank');
         });
     }
